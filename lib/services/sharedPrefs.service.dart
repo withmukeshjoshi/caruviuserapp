@@ -12,6 +12,12 @@ class LocalStoredData {
     return prefs.getString(key);
   }
 
+  Future getIntKey(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getInt(key);
+  }
+
   Future containsKey(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.containsKey(key);
@@ -20,6 +26,11 @@ class LocalStoredData {
   Future setStringKey(String key, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
+  }
+
+  Future setIntKey(String key, int value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(key, value);
   }
 
   Future setBoolKey(String key, bool value) async {
