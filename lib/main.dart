@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
                 title: 'Caruvi Agro Online',
                 theme: ThemeData(
                   brightness: Brightness.light,
-                  primarySwatch: Colors.green,
+                  primarySwatch: Colors.teal,
                 ),
                 home: HomePage(),
               );
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
                 title: 'Caruvi Agro Online',
                 theme: ThemeData(
                   brightness: Brightness.light,
-                  primarySwatch: Colors.green,
+                  primarySwatch: Colors.teal,
                 ),
                 home: LoginPage(),
               );
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             title: 'Caruvi Services',
             theme: ThemeData(
               brightness: Brightness.light,
-              primarySwatch: Colors.green,
+              primarySwatch: Colors.teal,
             ),
             home: WelcomePage(),
           );

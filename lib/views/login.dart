@@ -117,8 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                           style: ElevatedButton.styleFrom(
                             elevation: 0.0,
                             primary: isProcessing
-                                ? Colors.green[100]
-                                : Colors.green[900],
+                                ? Colors.teal[100]
+                                : Colors.teal[900],
                           ),
                           onPressed: () async {
                             if (loginPhoneNumber != '' && loginPassword != '') {
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                                   width: 25.0,
                                   height: 25.0,
                                   child: CircularProgressIndicator(
-                                    color: Colors.green[700],
+                                    color: Colors.teal[700],
                                     strokeWidth: 2.0,
                                   ),
                                 )

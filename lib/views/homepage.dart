@@ -5,6 +5,7 @@ import 'package:caruviuserapp/model/CityCategoryModel.dart';
 import 'package:caruviuserapp/model/CityWc.dart';
 import 'package:caruviuserapp/services/city.service.dart';
 import 'package:caruviuserapp/services/sharedPrefs.service.dart';
+import 'package:caruviuserapp/views/category_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage>
   );
   int currentPage = 0;
   String location = "Loading";
+  bool loadingCategories = true;
   Map<String, List<CategoryModel>> categories = new Map();
   @override
   void initState() {
@@ -47,6 +49,7 @@ class _HomePageState extends State<HomePage>
     }
     setState(() {
       location = getCity;
+      loadingCategories = false;
     });
   }
 
@@ -72,25 +75,41 @@ class _HomePageState extends State<HomePage>
                 scrollDirection: Axis.horizontal,
                 itemCount: categories[key]!.length,
                 itemBuilder: (BuildContext context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(value[index].photo))),
-                        margin: EdgeInsets.all(8.0),
-                        width: 80.0,
-                        height: 80.0,
-                      ),
-                      Text(
-                        value[index].name,
-                        style: TextStyle(fontSize: 12.0),
-                      )
-                    ],
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CategoryPage(
+                                    category: value[index],
+                                  )));
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(value[index].photo))),
+                          margin: EdgeInsets.all(8.0),
+                          width: 80.0,
+                          height: 80.0,
+                        ),
+                        SizedBox(
+                          width: 80.0,
+                          child: Text(
+                            value[index].name,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   );
                 }),
           ),
@@ -134,13 +153,13 @@ class _HomePageState extends State<HomePage>
                   ),
                   Text(
                     "Showing all services near you",
-                    style: TextStyle(fontSize: 12.0, color: Colors.black54),
+                    style: TextStyle(fontSize: 12.0, color: Colors.teal[900]),
                   ),
                 ],
               )
             ],
           ),
-          backgroundColor: Colors.green[700],
+          backgroundColor: Colors.teal[600],
           toolbarHeight: 80.0,
           elevation: 0.0,
         ),
@@ -166,8 +185,8 @@ class _HomePageState extends State<HomePage>
                 icon: Icon(Icons.message), label: "Requests"),
           ],
           enableFeedback: true,
-          selectedItemColor: Colors.green[800],
-          elevation: 1.0,
+          selectedItemColor: Colors.teal[800],
+          elevation: 7.0,
         ),
         body: PageView(
           controller: _pageController,
@@ -175,64 +194,83 @@ class _HomePageState extends State<HomePage>
             SingleChildScrollView(
                 child: SafeArea(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     height: 25.0,
                   ),
-                  getTextWidgets(),
-                  Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "Recently Viewed",
-                        style: GoogleFonts.lato(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black87),
-                      )),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: <Widget>[
+                  loadingCategories
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
                             Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10.0),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.green[100]!),
-                                  borderRadius: BorderRadius.circular(4.0)),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 13.0, horizontal: 25.0),
-                              child: Text("Car Service"),
+                              width: 25.0,
+                              height: 25.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3.0,
+                              ),
                             ),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10.0),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.green[100]!),
-                                  borderRadius: BorderRadius.circular(4.0)),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 13.0, horizontal: 25.0),
-                              child: Text("Mushroom"),
+                            SizedBox(
+                              width: 10.0,
                             ),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10.0),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.green[100]!),
-                                  borderRadius: BorderRadius.circular(4.0)),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 13.0, horizontal: 25.0),
-                              child: Text("Dhoopbatti"),
-                            ),
+                            Text('Loading Categories')
                           ],
-                        ),
-                      ),
-                    ],
-                  ),
+                        )
+                      : getTextWidgets(),
+                  // Container(
+                  //     padding: EdgeInsets.all(10.0),
+                  //     child: Text(
+                  //       "Recently Viewed",
+                  //       style: GoogleFonts.lato(
+                  //           fontSize: 14.0,
+                  //           fontWeight: FontWeight.w500,
+                  //           color: Colors.black87),
+                  //     )),
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.stretch,
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   children: <Widget>[
+                  //     SingleChildScrollView(
+                  //       scrollDirection: Axis.horizontal,
+                  //       child: Row(
+                  //         children: <Widget>[
+                  //           Container(
+                  //             margin: EdgeInsets.symmetric(horizontal: 10.0),
+                  //             decoration: BoxDecoration(
+                  //                 color: Colors.white,
+                  //                 border: Border.all(color: Colors.teal[100]!),
+                  //                 borderRadius: BorderRadius.circular(4.0)),
+                  //             padding: EdgeInsets.symmetric(
+                  //                 vertical: 13.0, horizontal: 25.0),
+                  //             child: Text("Car Service"),
+                  //           ),
+                  //           Container(
+                  //             margin: EdgeInsets.symmetric(horizontal: 10.0),
+                  //             decoration: BoxDecoration(
+                  //                 color: Colors.white,
+                  //                 border: Border.all(color: Colors.teal[100]!),
+                  //                 borderRadius: BorderRadius.circular(4.0)),
+                  //             padding: EdgeInsets.symmetric(
+                  //                 vertical: 13.0, horizontal: 25.0),
+                  //             child: Text("Mushroom"),
+                  //           ),
+                  //           Container(
+                  //             margin: EdgeInsets.symmetric(horizontal: 10.0),
+                  //             decoration: BoxDecoration(
+                  //                 color: Colors.white,
+                  //                 border: Border.all(color: Colors.teal[100]!),
+                  //                 borderRadius: BorderRadius.circular(4.0)),
+                  //             padding: EdgeInsets.symmetric(
+                  //                 vertical: 13.0, horizontal: 25.0),
+                  //             child: Text("Dhoopbatti"),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+
                   SizedBox(
                     height: 50.0,
                   ),

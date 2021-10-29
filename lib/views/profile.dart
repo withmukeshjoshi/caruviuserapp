@@ -70,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage>
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              backgroundColor: Colors.green[900],
+              backgroundColor: Colors.teal[900],
               pinned: true,
               floating: true,
               title: Text('Settings'),
@@ -104,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage>
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.green[50]!,
+                                  color: Colors.teal[50]!,
                                   style: BorderStyle.solid,
                                   width: 1.0)),
                           focusedBorder: OutlineInputBorder(
@@ -130,12 +130,12 @@ class _ProfilePageState extends State<ProfilePage>
                           fillColor: Colors.grey[200],
                           disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.green[50]!,
+                                  color: Colors.teal[50]!,
                                   style: BorderStyle.solid,
                                   width: 1.0)),
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.green[50]!,
+                                  color: Colors.teal[50]!,
                                   style: BorderStyle.solid,
                                   width: 1.0)),
                           focusedBorder: OutlineInputBorder(
@@ -160,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage>
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.green[50]!,
+                                  color: Colors.teal[50]!,
                                   style: BorderStyle.solid,
                                   width: 1.0)),
                           focusedBorder: OutlineInputBorder(
@@ -184,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage>
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.green[50]!,
+                                  color: Colors.teal[50]!,
                                   style: BorderStyle.solid,
                                   width: 1.0)),
                           focusedBorder: OutlineInputBorder(
@@ -208,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage>
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.green[50]!,
+                                  color: Colors.teal[50]!,
                                   style: BorderStyle.solid,
                                   width: 1.0)),
                           focusedBorder: OutlineInputBorder(
@@ -233,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage>
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.green[50]!,
+                                  color: Colors.teal[50]!,
                                   style: BorderStyle.solid,
                                   width: 1.0)),
                           focusedBorder: OutlineInputBorder(
@@ -304,15 +304,15 @@ class _ProfilePageState extends State<ProfilePage>
                           style: ElevatedButton.styleFrom(
                             elevation: 0.0,
                             primary: isProcessing
-                                ? Colors.green[100]
-                                : Colors.green[900],
+                                ? Colors.teal[100]
+                                : Colors.teal[900],
                           ),
                           child: isProcessing
                               ? SizedBox(
                                   width: 25.0,
                                   height: 25.0,
                                   child: CircularProgressIndicator(
-                                    color: Colors.green[700],
+                                    color: Colors.teal[700],
                                     strokeWidth: 2.0,
                                   ),
                                 )

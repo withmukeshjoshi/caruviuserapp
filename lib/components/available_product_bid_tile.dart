@@ -92,7 +92,7 @@ class _AvailableProductTileState extends State<AvailableProductTile> {
                                   hintText: "100",
                                   enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Colors.green[50]!,
+                                          color: Colors.teal[50]!,
                                           style: BorderStyle.solid,
                                           width: 1.0)),
                                   focusedBorder: OutlineInputBorder(
@@ -110,7 +110,7 @@ class _AvailableProductTileState extends State<AvailableProductTile> {
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0.0,
                                       primary: text != ''
-                                          ? Colors.green[800]
+                                          ? Colors.teal[800]
                                           : Colors.grey[50]),
                                   child: Text(
                                     "Send Quote",

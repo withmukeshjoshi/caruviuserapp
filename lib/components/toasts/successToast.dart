@@ -12,7 +12,7 @@ class SuccessToast extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25.0),
-        color: Colors.green[900],
+        color: Colors.teal[900],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
