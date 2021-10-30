@@ -1,0 +1,145 @@
+{
+  "project_info": {
+    "project_number": "316466078314",
+    "project_id": "caruvi-agro",
+    "storage_bucket": "caruvi-agro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316466078314:android:50fe1dcd7e50d7af952013",
+        "android_client_info": {
+          "package_name": "com.caruvi.agroapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316466078314-6a49k4ebqmmq6a41luim84s6imt61vj4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.caruvi.agroapp",
+            "certificate_hash": "314ebffc50eab81c6658749cda31b4344fe0a336"
+          }
+        },
+        {
+          "client_id": "316466078314-7otn7vkrtgbi6v9pjlkghq4t04vck1jm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.caruvi.agroapp",
+            "certificate_hash": "9c1ad3ebe4dd99d6cebc8366139f53057b56ae3c"
+          }
+        },
+        {
+          "client_id": "316466078314-7tdl07s8t9rkic6t90s9tv8g1llh7sn0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.caruvi.agroapp",
+            "certificate_hash": "29dee683e0ff8cf1f43a7ec8d1599beee79204e7"
+          }
+        },
+        {
+          "client_id": "316466078314-hdjpabelem4dn8sb2kfqjr15b4iuuobp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.caruvi.agroapp",
+            "certificate_hash": "d4caa22bc19aa951a1a8c7780e12be3362614d40"
+          }
+        },
+        {
+          "client_id": "316466078314-ppprvhlgukjhbrc8j8egf0q9s8vdpgp9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.caruvi.agroapp",
+            "certificate_hash": "6cf6664ef9f2b8d4140025176e24dec283947283"
+          }
+        },
+        {
+          "client_id": "316466078314-3nniolkqm30i2gac144r6038akd68nn5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH_PPe4RY033tqblDPmrHhrqvo3qq6CEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316466078314-3nniolkqm30i2gac144r6038akd68nn5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316466078314:android:5ba26e95d0e0524a952013",
+        "android_client_info": {
+          "package_name": "com.orangewp.caruvionline.caruviapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316466078314-3nniolkqm30i2gac144r6038akd68nn5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH_PPe4RY033tqblDPmrHhrqvo3qq6CEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316466078314-3nniolkqm30i2gac144r6038akd68nn5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316466078314:android:d8a4489eb7ac5321952013",
+        "android_client_info": {
+          "package_name": "com.orangewp.caruviservice.caruviuserapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316466078314-21qqcugbhq0fammavpou4d6rned80u60.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orangewp.caruviservice.caruviuserapp",
+            "certificate_hash": "0019e8ad915acd1e6385660db6d0846d8d26a6f6"
+          }
+        },
+        {
+          "client_id": "316466078314-3nniolkqm30i2gac144r6038akd68nn5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH_PPe4RY033tqblDPmrHhrqvo3qq6CEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316466078314-3nniolkqm30i2gac144r6038akd68nn5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

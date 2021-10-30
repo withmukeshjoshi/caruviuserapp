@@ -5,10 +5,15 @@ import 'package:caruviuserapp/model/CityCategoryModel.dart';
 import 'package:caruviuserapp/model/CityWc.dart';
 import 'package:caruviuserapp/services/city.service.dart';
 import 'package:caruviuserapp/services/sharedPrefs.service.dart';
+import 'package:caruviuserapp/services/user.service.dart';
 import 'package:caruviuserapp/views/category_page.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  late FirebaseMessaging messaging;
   PageController _pageController = new PageController(
     initialPage: 0,
   );
@@ -28,8 +34,44 @@ class _HomePageState extends State<HomePage>
   Map<String, List<CategoryModel>> categories = new Map();
   @override
   void initState() {
-    super.initState();
     loadDetails();
+    messaging = FirebaseMessaging.instance;
+    messaging.getToken().then((value) {
+      print(value);
+      if (value != null) {
+        updateMyToken(value);
+      }
+    });
+
+    messaging.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        print(message);
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                // TODO add a proper drawable resource to android, for now using
+                //      one that already exists in example app.
+                icon: 'launch_background',
+              ),
+            ));
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+    });
+    super.initState();
   }
 
   loadDetails() async {

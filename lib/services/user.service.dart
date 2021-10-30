@@ -30,3 +30,14 @@ Future updateMyProfile(Profile userProfile) async {
     "city": userProfile.city
   });
 }
+
+Future updateMyToken(String Apptoken) async {
+  var token = await LocalStoredData().getStringKey('token');
+  var userId = await LocalStoredData().getIntKey('id');
+  var url = Uri.parse(serverADD + '/users/$userId/membertoken');
+  return http.patch(url, headers: {
+    'Authorization': 'Bearer $token',
+  }, body: {
+    "token": Apptoken,
+  });
+}
