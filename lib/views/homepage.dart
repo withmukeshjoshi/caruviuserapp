@@ -9,6 +9,7 @@ import 'package:caruviuserapp/services/sharedPrefs.service.dart';
 import 'package:caruviuserapp/services/user.service.dart';
 import 'package:caruviuserapp/views/category_page.dart';
 import 'package:caruviuserapp/views/category_page_transport.dart';
+import 'package:caruviuserapp/views/profile.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -189,7 +190,13 @@ class _HomePageState extends State<HomePage>
           actions: [
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Icon(Icons.person))
+                child: IconButton(
+                  icon: Icon(Icons.person),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ProfilePage()));
+                  },
+                ))
           ],
           title: Row(
             children: [

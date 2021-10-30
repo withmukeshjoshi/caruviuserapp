@@ -153,6 +153,7 @@ class _TransportCategoryPageState extends State<TransportCategoryPage> {
                       onChanged: (text) {
                         enteredValue = text;
                       },
+                      textInputAction: TextInputAction.next,
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
                         prefixIcon: Icon(
@@ -190,6 +191,7 @@ class _TransportCategoryPageState extends State<TransportCategoryPage> {
                       onChanged: (text) {
                         enteredValue2 = text;
                       },
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         hintText: "To",
                         prefixIcon: Icon(
@@ -226,6 +228,7 @@ class _TransportCategoryPageState extends State<TransportCategoryPage> {
                       onChanged: (text) {
                         enteredValue3 = text;
                       },
+                      textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         hintText: "Number of People",

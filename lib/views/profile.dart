@@ -23,7 +23,6 @@ class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late FToast fToast;
   bool isProcessing = false;
-  late final TabController _tabController;
   late Profile userProfile;
   late String fullName, phoneNumber, businessName, city, address, emailAddress;
   TextEditingController fullNameController = TextEditingController();
@@ -39,7 +38,6 @@ class _ProfilePageState extends State<ProfilePage>
     getUser();
     fToast = FToast();
     fToast.init(context);
-    _tabController = TabController(length: 2, vsync: this);
   }
 
   Future getUser() async {
@@ -47,18 +45,17 @@ class _ProfilePageState extends State<ProfilePage>
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<String, dynamic>();
+      print(parsed);
       this.userProfile = Profile.fromJson(parsed);
       fullNameController.text = this.userProfile.fullName;
       phoneNumberController.text = this.userProfile.phoneNumber;
       businessNameController.text = this.userProfile.businessName;
-      cityController.text = this.userProfile.city;
       businessAddressController.text = this.userProfile.address;
       emailAddressController.text = this.userProfile.emailAddress;
       fullName = this.userProfile.fullName;
       emailAddress = this.userProfile.emailAddress;
       phoneNumber = this.userProfile.phoneNumber;
       businessName = this.userProfile.businessName;
-      city = this.userProfile.city;
       address = this.userProfile.address;
     }
   }
@@ -73,303 +70,265 @@ class _ProfilePageState extends State<ProfilePage>
               backgroundColor: Colors.teal[900],
               pinned: true,
               floating: true,
-              title: Text('Settings'),
+              title: Text('Profile'),
               forceElevated: innerBoxIsScrolled,
-              bottom: TabBar(
-                tabs: <Tab>[
-                  Tab(text: 'My Profile'),
-                  Tab(text: 'My Subscriptions'),
-                ],
-                controller: _tabController,
-              ),
             ),
           ];
         },
-        body: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-              physics: ClampingScrollPhysics(),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
-                      onChanged: (value) {
-                        this.fullName = value;
-                      },
-                      controller: fullNameController,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.teal[50]!,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.green,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          helperText: "Eg: Arjun Bhatt",
-                          helperStyle: TextStyle(fontSize: 10.0),
-                          labelText: "Your Name"),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: TextField(
-                      controller: phoneNumberController,
-                      onChanged: (value) {
-                        this.phoneNumber = value;
-                      },
-                      decoration: InputDecoration(
-                          enabled: false,
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                          disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.teal[50]!,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.teal[50]!,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.green,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          helperText: "Eg: 9898989898",
-                          helperStyle: TextStyle(fontSize: 10.0),
-                          labelText: "Phone Number",
-                          prefixText: "+91-"),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
-                      onChanged: (value) {
-                        this.emailAddress = value;
-                      },
-                      controller: emailAddressController,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.teal[50]!,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.green,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          helperText: "Eg: example@gmail.com",
-                          helperStyle: TextStyle(fontSize: 10.0),
-                          labelText: "Email Address"),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
-                      onChanged: (value) {
-                        this.businessName = value;
-                      },
-                      controller: businessNameController,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.teal[50]!,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.green,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          helperText: "Eg: Bhatiya Brothers Electronics",
-                          helperStyle: TextStyle(fontSize: 10.0),
-                          labelText: "Business Name"),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
-                      onChanged: (value) {
-                        this.city = value;
-                      },
-                      controller: cityController,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.teal[50]!,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.green,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          helperText: "Eg: Kotdwar",
-                          labelText: "City"),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
-                      maxLines: 8,
-                      onChanged: (value) {
-                        this.address = value;
-                      },
-                      minLines: 1,
-                      controller: businessAddressController,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.teal[50]!,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.green,
-                                  style: BorderStyle.solid,
-                                  width: 1.0)),
-                          helperText: "Eg: Main market, Kotdwar",
-                          helperStyle: TextStyle(fontSize: 10.0),
-                          labelText: "Business Address"),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50.0,
-                  ),
-                  SizedBox(
-                      width: 130.0,
-                      height: 40.0,
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              this.isProcessing = !this.isProcessing;
-                            });
-                            fToast.showToast(
-                              child: ProcessingToast(
-                                message: "Updating Profile...",
-                              ),
-                              gravity: ToastGravity.CENTER,
-                              toastDuration: Duration(seconds: 1),
-                            );
-                            Profile updatedProfile = new Profile(
-                                address: this.address,
-                                banned: userProfile.banned,
-                                userType: userProfile.userType,
-                                token: userProfile.token,
-                                profilePicture: userProfile.profilePicture,
-                                lastVisit: userProfile.lastVisit,
-                                fullName: this.fullName,
-                                emailAddress: this.emailAddress,
-                                created: userProfile.created,
-                                city: this.city,
-                                businessName: this.businessName,
-                                phoneNumber: userProfile.phoneNumber,
-                                id: userProfile.id);
-                            Response response =
-                                await updateMyProfile(updatedProfile);
-                            if (response.statusCode == 200) {
-                              fToast.showToast(
-                                child: SuccessToast(
-                                  message: "Profile Updated",
-                                ),
-                                gravity: ToastGravity.CENTER,
-                                toastDuration: Duration(seconds: 2),
-                              );
-                            } else {
-                              fToast.showToast(
-                                child: ErrorToast(
-                                  message: "Something went wrong",
-                                ),
-                                gravity: ToastGravity.CENTER,
-                                toastDuration: Duration(seconds: 1),
-                              );
-                            }
-                            setState(() {
-                              this.isProcessing = !this.isProcessing;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0.0,
-                            primary: isProcessing
-                                ? Colors.teal[100]
-                                : Colors.teal[900],
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+          physics: ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: TextField(
+                  onChanged: (value) {
+                    this.fullName = value;
+                  },
+                  controller: fullNameController,
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.teal[50]!,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.green,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      helperText: "Eg: Arjun Bhatt",
+                      helperStyle: TextStyle(fontSize: 10.0),
+                      labelText: "Your Name"),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: TextField(
+                  controller: phoneNumberController,
+                  onChanged: (value) {
+                    this.phoneNumber = value;
+                  },
+                  decoration: InputDecoration(
+                      enabled: false,
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.teal[50]!,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.teal[50]!,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.green,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      helperText: "Eg: 9898989898",
+                      helperStyle: TextStyle(fontSize: 10.0),
+                      labelText: "Phone Number",
+                      prefixText: "+91-"),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: TextField(
+                  onChanged: (value) {
+                    this.emailAddress = value;
+                  },
+                  controller: emailAddressController,
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.teal[50]!,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.green,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      helperText: "Eg: example@gmail.com",
+                      helperStyle: TextStyle(fontSize: 10.0),
+                      labelText: "Email Address"),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: TextField(
+                  onChanged: (value) {
+                    this.businessName = value;
+                  },
+                  controller: businessNameController,
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.teal[50]!,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.green,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      helperText: "Eg: Bhatiya Brothers Electronics",
+                      helperStyle: TextStyle(fontSize: 10.0),
+                      labelText: "Business Name"),
+                ),
+              ),
+              // Container(
+              //   padding: EdgeInsets.all(10.0),
+              //   margin: EdgeInsets.only(bottom: 10.0),
+              //   child: TextField(
+              //     onChanged: (value) {
+              //       this.city = value;
+              //     },
+              //     controller: cityController,
+              //     decoration: InputDecoration(
+              //         enabled: false,
+              //         filled: true,
+              //         fillColor: Colors.grey[200],
+              //         disabledBorder: OutlineInputBorder(
+              //             borderSide: BorderSide(
+              //                 color: Colors.teal[50]!,
+              //                 style: BorderStyle.solid,
+              //                 width: 1.0)),
+              //         enabledBorder: OutlineInputBorder(
+              //             borderSide: BorderSide(
+              //                 color: Colors.teal[50]!,
+              //                 style: BorderStyle.solid,
+              //                 width: 1.0)),
+              //         focusedBorder: OutlineInputBorder(
+              //             borderSide: BorderSide(
+              //                 color: Colors.green,
+              //                 style: BorderStyle.solid,
+              //                 width: 1.0)),
+              //         helperText: "Eg: Kotdwar",
+              //         labelText: "City"),
+              //   ),
+              // ),
+
+              Container(
+                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: TextField(
+                  maxLines: 8,
+                  onChanged: (value) {
+                    this.address = value;
+                  },
+                  minLines: 1,
+                  controller: businessAddressController,
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.teal[50]!,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.green,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      helperText: "Eg: Main market, Kotdwar",
+                      helperStyle: TextStyle(fontSize: 10.0),
+                      labelText: "Business Address"),
+                ),
+              ),
+              SizedBox(
+                height: 50.0,
+              ),
+              SizedBox(
+                  width: 130.0,
+                  height: 40.0,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          this.isProcessing = !this.isProcessing;
+                        });
+                        fToast.showToast(
+                          child: ProcessingToast(
+                            message: "Updating Profile...",
                           ),
-                          child: isProcessing
-                              ? SizedBox(
-                                  width: 25.0,
-                                  height: 25.0,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.teal[700],
-                                    strokeWidth: 2.0,
-                                  ),
-                                )
-                              : Text(
-                                  "Update Profile",
-                                  style: TextStyle(
-                                      fontSize: 12.0, color: Colors.white),
-                                ))),
-                  SizedBox(
-                    height: 50.0,
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        logoutUser();
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()));
+                          gravity: ToastGravity.CENTER,
+                          toastDuration: Duration(seconds: 1),
+                        );
+                        Profile updatedProfile = new Profile(
+                            address: this.address,
+                            banned: userProfile.banned,
+                            userType: userProfile.userType,
+                            token: userProfile.token,
+                            profilePicture: userProfile.profilePicture,
+                            lastVisit: userProfile.lastVisit,
+                            fullName: this.fullName,
+                            emailAddress: this.emailAddress,
+                            created: userProfile.created,
+                            businessName: this.businessName,
+                            phoneNumber: userProfile.phoneNumber,
+                            id: userProfile.id);
+                        Response response =
+                            await updateMyProfile(updatedProfile);
+                        if (response.statusCode == 200) {
+                          fToast.showToast(
+                            child: SuccessToast(
+                              message: "Profile Updated",
+                            ),
+                            gravity: ToastGravity.CENTER,
+                            toastDuration: Duration(seconds: 2),
+                          );
+                        } else {
+                          fToast.showToast(
+                            child: ErrorToast(
+                              message: "Something went wrong",
+                            ),
+                            gravity: ToastGravity.CENTER,
+                            toastDuration: Duration(seconds: 1),
+                          );
+                        }
+                        setState(() {
+                          this.isProcessing = !this.isProcessing;
+                        });
                       },
-                      child: Text("Logout"))
-                ],
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0.0,
+                        primary:
+                            isProcessing ? Colors.teal[100] : Colors.teal[900],
+                      ),
+                      child: isProcessing
+                          ? SizedBox(
+                              width: 25.0,
+                              height: 25.0,
+                              child: CircularProgressIndicator(
+                                color: Colors.teal[700],
+                                strokeWidth: 2.0,
+                              ),
+                            )
+                          : Text(
+                              "Update Profile",
+                              style: TextStyle(
+                                  fontSize: 12.0, color: Colors.white),
+                            ))),
+              SizedBox(
+                height: 50.0,
               ),
-            ),
-            SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-              physics: ClampingScrollPhysics(),
-              child: Column(
-                children: [
-                  ServiceListItem(),
-                  ServiceListItem(),
-                  ServiceListItem(),
-                  ServiceListItem(),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                ],
-              ),
-            )
-          ],
+              TextButton(
+                  onPressed: () {
+                    logoutUser();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  },
+                  child: Text("Logout"))
+            ],
+          ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.verified_user),
-      //       label: 'Profile',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.local_offer),
-      //       label: 'Services',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.verified_user),
-      //       label: 'Profile',
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

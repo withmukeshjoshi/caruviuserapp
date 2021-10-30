@@ -27,7 +27,6 @@ Future updateMyProfile(Profile userProfile) async {
     "phoneNumber": userProfile.phoneNumber,
     "businessName": userProfile.businessName,
     "address": userProfile.address,
-    "city": userProfile.city
   });
 }
 
