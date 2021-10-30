@@ -172,6 +172,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.right,
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(0.0),
                       suffix: Container(
                         margin: EdgeInsets.only(left: 10.0),
                         child: Text(
@@ -194,9 +195,6 @@ class _CategoryPageState extends State<CategoryPage> {
                         fontWeight: FontWeight.w600,
                         fontSize: 16.0),
                   ),
-                ),
-                SizedBox(
-                  height: 50.0,
                 ),
                 Center(
                   child: SizedBox(

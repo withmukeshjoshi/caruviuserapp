@@ -4,15 +4,18 @@ import 'dart:developer';
 import 'package:caruviuserapp/model/CityCategoryModel.dart';
 import 'package:caruviuserapp/model/CityWc.dart';
 import 'package:caruviuserapp/services/city.service.dart';
+import 'package:caruviuserapp/services/quote.service.dart';
 import 'package:caruviuserapp/services/sharedPrefs.service.dart';
 import 'package:caruviuserapp/services/user.service.dart';
 import 'package:caruviuserapp/views/category_page.dart';
+import 'package:caruviuserapp/views/category_page_transport.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:http/http.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
 
 class HomePage extends StatefulWidget {
@@ -119,12 +122,21 @@ class _HomePageState extends State<HomePage>
                 itemBuilder: (BuildContext context, index) {
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CategoryPage(
-                                    category: value[index],
-                                  )));
+                      if (value[index].type == 'Transport') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TransportCategoryPage(
+                                      category: value[index],
+                                    )));
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CategoryPage(
+                                      category: value[index],
+                                    )));
+                      }
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,6 +175,8 @@ class _HomePageState extends State<HomePage>
         crossAxisAlignment: CrossAxisAlignment.stretch, children: list);
   }
 
+  void _launchURL(url) async =>
+      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -341,9 +355,45 @@ class _HomePageState extends State<HomePage>
                 ],
               ),
             )),
-            Center(
-              child: Text("Requests"),
-            )
+            FutureBuilder(
+                future: QuoteService().getLatestServices(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    var parsedData = jsonDecode(snapshot.data);
+                    print(parsedData.length);
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: parsedData.length,
+                        itemBuilder: (context, i) {
+                          return ListTile(
+                            leading: CircleAvatar(
+                              radius: 20.0,
+                              foregroundImage: NetworkImage(
+                                  parsedData[i]['category']['photo']),
+                            ),
+                            title: Text(
+                              '${parsedData[i]['vendor']['businessName']} quoted ₹${parsedData[i]['amount']}',
+                              style: GoogleFonts.lato(fontSize: 14.0),
+                            ),
+                            subtitle: Text(
+                              "${parsedData[i]['category']['name']} - ${parsedData[i]['category']['type']}",
+                              style: GoogleFonts.lato(fontSize: 12.0),
+                            ),
+                            trailing: IconButton(
+                              color: Colors.teal,
+                              iconSize: 30.0,
+                              icon: Icon(Icons.phone),
+                              onPressed: () {
+                                var url = 'tel://' +
+                                    parsedData[i]['vendor']['phoneNumber'];
+                                _launchURL(url);
+                              },
+                            ),
+                          );
+                        });
+                  }
+                  return CircularProgressIndicator();
+                }),
           ],
         ));
   }

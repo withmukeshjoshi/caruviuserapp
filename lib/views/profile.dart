@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Future getUser() async {
     Response response = await getMyProfile();
-    print(response.statusCode);
+
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<String, dynamic>();
       this.userProfile = Profile.fromJson(parsed);
