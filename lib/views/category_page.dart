@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class CategoryPage extends StatefulWidget {
   final CategoryModel category;
@@ -55,13 +56,8 @@ class _CategoryPageState extends State<CategoryPage> {
           toastDuration: Duration(seconds: 2),
         );
       } else {
-        fToast.showToast(
-          child: SuccessToast(
-            message: "Your request has been submitted",
-          ),
-          gravity: ToastGravity.BOTTOM,
-          toastDuration: Duration(seconds: 2),
-        );
+        showSimpleNotification(Text("Your request has been submitted"),
+            background: Colors.green, leading: Icon(Icons.check));
         Navigator.pop(context);
       }
       isProcessing = !isProcessing;

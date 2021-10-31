@@ -41,6 +41,7 @@ saveDetailsLocally(dynamic data) {
 
 logoutUser() {
   LocalStoredData().deleteKey('token');
+  LocalStoredData().deleteKey('subscription');
   LocalStoredData().deleteKey('isloggedin');
   LocalStoredData().deleteKey('id');
   LocalStoredData().deleteKey('fullName');

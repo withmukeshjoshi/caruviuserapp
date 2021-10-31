@@ -243,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
               ),
               SizedBox(
-                height: 50.0,
+                height: 20.0,
               ),
               SizedBox(
                   width: 130.0,
@@ -264,7 +264,6 @@ class _ProfilePageState extends State<ProfilePage>
                             address: this.address,
                             banned: userProfile.banned,
                             userType: userProfile.userType,
-                            token: userProfile.token,
                             profilePicture: userProfile.profilePicture,
                             lastVisit: userProfile.lastVisit,
                             fullName: this.fullName,

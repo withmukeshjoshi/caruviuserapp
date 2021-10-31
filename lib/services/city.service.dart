@@ -14,4 +14,16 @@ class CityService {
       },
     );
   }
+
+  searchCategory(String id) async {
+    var token = await LocalStoredData().getStringKey('token');
+    var url = Uri.parse(serverADD + '/category/search?cat=${id}');
+    return http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+    );
+  }
 }

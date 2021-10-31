@@ -9,7 +9,6 @@ class Profile {
   final String userType;
   final String banned;
   final dynamic lastVisit;
-  final String token;
   final dynamic created;
 
   const Profile({
@@ -23,7 +22,6 @@ class Profile {
     required this.userType,
     required this.banned,
     required this.lastVisit,
-    required this.token,
     required this.created,
   });
 
@@ -39,7 +37,6 @@ class Profile {
       userType: json['userType'] as String,
       banned: json['banned'] as String,
       lastVisit: json['lastVisit'] as dynamic,
-      token: json['token'] as String,
       created: json['created'] as dynamic,
     );
   }

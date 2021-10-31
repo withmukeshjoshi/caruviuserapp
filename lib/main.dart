@@ -3,7 +3,7 @@ import 'package:caruviuserapp/views/login.dart';
 import 'package:caruviuserapp/views/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:overlay_support/overlay_support.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
@@ -76,34 +76,37 @@ class MyApp extends StatelessWidget {
             (BuildContext context, AsyncSnapshot<SharedPreferences> prefs) {
           if (prefs.hasData) {
             if (prefs.data!.containsKey('isloggedin')) {
-              return MaterialApp(
-                title: 'Caruvi Agro Online',
+              return OverlaySupport.global(
+                  child: MaterialApp(
+                title: 'Caruvi Services',
                 theme: ThemeData(
                   brightness: Brightness.light,
                   primarySwatch: Colors.teal,
                 ),
                 home: HomePage(),
-              );
+              ));
             } else {
-              return MaterialApp(
-                title: 'Caruvi Agro Online',
+              return OverlaySupport.global(
+                  child: MaterialApp(
+                title: 'Caruvi Services',
                 theme: ThemeData(
                   brightness: Brightness.light,
                   primarySwatch: Colors.teal,
                 ),
                 home: LoginPage(),
-              );
+              ));
             }
           }
 
-          return MaterialApp(
+          return OverlaySupport.global(
+              child: MaterialApp(
             title: 'Caruvi Services',
             theme: ThemeData(
               brightness: Brightness.light,
               primarySwatch: Colors.teal,
             ),
             home: WelcomePage(),
-          );
+          ));
         });
   }
 }

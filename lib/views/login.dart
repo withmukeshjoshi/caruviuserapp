@@ -34,10 +34,10 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/login.jpg'),
-                        fit: BoxFit.cover)),
+                        image: AssetImage('assets/splash.png'),
+                        fit: BoxFit.scaleDown)),
                 width: double.infinity,
-                height: 180.0,
+                height: 250.0,
               ),
               Padding(
                 padding: EdgeInsets.all(40.0),
@@ -64,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                       onChanged: (value) {
                         loginPhoneNumber = value;
                       },
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                           fillColor: Color(0xFFF3F8ED),
                           filled: true,
@@ -91,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                           loginPassword = value;
                         });
                       },
+                      textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
                           labelText: "Password",
                           fillColor: Color(0xFFF3F8ED),
@@ -121,34 +123,49 @@ class _LoginPageState extends State<LoginPage> {
                                 : Colors.teal[900],
                           ),
                           onPressed: () async {
-                            if (loginPhoneNumber != '' && loginPassword != '') {
-                              setState(() {
-                                isProcessing = !isProcessing;
-                              });
-                              var auth = await authenticateuser(
-                                  phoneNumber: loginPhoneNumber,
-                                  password: loginPassword);
-                              if (auth) {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomePage()));
+                            try {
+                              if (loginPhoneNumber != '' &&
+                                  loginPassword != '') {
+                                setState(() {
+                                  isProcessing = !isProcessing;
+                                });
+                                var auth = await authenticateuser(
+                                    phoneNumber: loginPhoneNumber,
+                                    password: loginPassword);
+                                if (auth) {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage()));
+                                } else {
+                                  fToast.showToast(
+                                    child: ErrorToast(
+                                      message: "Something went wrong",
+                                    ),
+                                    gravity: ToastGravity.BOTTOM,
+                                    toastDuration: Duration(seconds: 1),
+                                  );
+                                }
+                                setState(() {
+                                  isProcessing = !isProcessing;
+                                });
                               } else {
                                 fToast.showToast(
                                   child: ErrorToast(
-                                    message: "Something went wrong",
+                                    message: "Enter Valid Credentials",
                                   ),
                                   gravity: ToastGravity.BOTTOM,
                                   toastDuration: Duration(seconds: 1),
                                 );
                               }
+                            } catch (err) {
+                              print(err);
                               setState(() {
                                 isProcessing = !isProcessing;
                               });
-                            } else {
                               fToast.showToast(
                                 child: ErrorToast(
-                                  message: "Enter Valid Credentials",
+                                  message: "Something went wrong",
                                 ),
                                 gravity: ToastGravity.BOTTOM,
                                 toastDuration: Duration(seconds: 1),
