@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:caruviuserapp/components/toasts/errorToast.dart';
 import 'package:caruviuserapp/components/toasts/processing.dart';
 import 'package:caruviuserapp/components/toasts/successToast.dart';
@@ -98,7 +99,7 @@ class _TransportCategoryPageState extends State<TransportCategoryPage> {
                   color: Colors.transparent,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(
+                    image: CachedNetworkImageProvider(
                       widget.category.photo,
                     ),
                   ),

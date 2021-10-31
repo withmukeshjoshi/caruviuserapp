@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:caruviuserapp/model/CityCategoryModel.dart';
 import 'package:caruviuserapp/model/CityWc.dart';
 import 'package:caruviuserapp/services/city.service.dart';
@@ -144,10 +145,10 @@ class _HomePageState extends State<HomePage>
           Container(
             height: value.length == 1
                 ? 300.0
-                : (value.length == 3)
+                : (value.length < 4)
                     ? 150.0
                     : 130.0,
-            margin: (value.length == 3)
+            margin: (value.length < 4)
                 ? EdgeInsets.only(bottom: 15.0)
                 : EdgeInsets.only(bottom: 5.0),
             child: ListView.builder(
@@ -170,11 +171,20 @@ class _HomePageState extends State<HomePage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipRRect(
-                                child: Image.network(
-                                  value[index].photo,
+                                child: CachedNetworkImage(
+                                  imageUrl: value[index].photo,
+                                  fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: 130.0,
-                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Image.asset(
+                                    'assets/placeholder.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                    'assets/placeholder.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(8.0),
@@ -289,7 +299,7 @@ class _HomePageState extends State<HomePage>
                           }
                         });
                   }
-                  if (value.length == 3) {
+                  if (value.length < 4) {
                     return GestureDetector(
                         child: Container(
                           width: 110.0,
@@ -297,11 +307,20 @@ class _HomePageState extends State<HomePage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipRRect(
-                                child: Image.network(
-                                  value[index].photo,
+                                child: CachedNetworkImage(
+                                  imageUrl: value[index].photo,
+                                  fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: 80.0,
-                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Image.asset(
+                                    'assets/placeholder.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                    'assets/placeholder.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(8.0),
@@ -386,15 +405,30 @@ class _HomePageState extends State<HomePage>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              image: DecorationImage(
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Container(
+                              width: 60.0,
+                              child: CachedNetworkImage(
+                                imageUrl: value[index].photo,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 130.0,
+                                placeholder: (context, url) => Image.asset(
+                                  'assets/placeholder.jpg',
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(value[index].photo))),
-                          margin: EdgeInsets.all(8.0),
-                          width: 60.0,
-                          height: 60.0,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                  'assets/placeholder.jpg',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              height: 60.0,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           width: 60.0,
@@ -735,11 +769,22 @@ class _HomePageState extends State<HomePage>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
-                                    child: Image.network(
-                                      parsedData[i]['category']['photo'],
+                                    child: CachedNetworkImage(
+                                      imageUrl: parsedData[i]['category']
+                                          ['photo'],
+                                      fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: 100.0,
-                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          Image.asset(
+                                        'assets/placeholder.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                        'assets/placeholder.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(8.0),
