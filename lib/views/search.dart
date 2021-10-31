@@ -211,6 +211,17 @@ class _SearchPageState extends State<SearchPage> {
                           });
                     } else {
                       // TODO: Nothing found;
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: (MediaQuery.of(context).size.height / 2) -
+                                200.0,
+                          ),
+                          Center(
+                            child: Text("No Result Found"),
+                          )
+                        ],
+                      );
                     }
                   }
                   return Center(

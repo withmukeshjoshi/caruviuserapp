@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
 
@@ -634,6 +635,20 @@ class _HomePageState extends State<HomePage>
                                                     SearchPage(
                                                       term: searchTerm,
                                                     )));
+                                      } else {
+                                        showSimpleNotification(
+                                            Text(
+                                              "Enter Search Term",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            elevation: 5.0,
+                                            background: Colors.teal[200],
+                                            leading: Icon(
+                                              Icons.error,
+                                              color: Colors.teal,
+                                            ));
                                       }
                                     },
                                   ),
