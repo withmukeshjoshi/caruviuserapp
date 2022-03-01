@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage>
                   )),
           Container(
             height: value.length == 1
-                ? 240.0
+                ? 260.0
                 : (value.length < 4)
                     ? 150.0
                     : 130.0,
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage>
                     return GestureDetector(
                         child: Container(
                           width: 100.0,
-                          height: 210.0,
+                          height: 230.0,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
