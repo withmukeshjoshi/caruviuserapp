@@ -1,5 +1,4 @@
 import 'package:caruviuserapp/config/static.dart';
-import 'package:caruviuserapp/model/Profile.dart';
 import 'package:caruviuserapp/services/sharedPrefs.service.dart';
 import 'package:http/http.dart' as http;
 

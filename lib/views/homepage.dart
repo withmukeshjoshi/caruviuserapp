@@ -788,6 +788,60 @@ class _HomePageState extends State<HomePage>
                           shrinkWrap: true,
                           itemCount: parsedData.length,
                           itemBuilder: (context, i) {
+                            return ListTile(
+                              horizontalTitleGap: 8.0,
+                              leading: ClipRRect(
+                                child: CachedNetworkImage(
+                                  imageUrl: parsedData[i]['category']['photo'],
+                                  fit: BoxFit.cover,
+                                  width: 40.0,
+                                  height: 40.0,
+                                  placeholder: (context, url) => Image.asset(
+                                    'assets/placeholder.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                    'assets/placeholder.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)),
+                              ),
+                              title: Text(
+                                parsedData[i]['vendor']['businessName'] +
+                                    ' quoted ₹${parsedData[i]['amount']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.lato(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              subtitle: Text(
+                                "${parsedData[i]['category']['name']} - ${parsedData[i]['category']['type']}",
+                                style: GoogleFonts.lato(fontSize: 10.0),
+                              ),
+                              trailing: Container(
+                                width: 40.0,
+                                height: 40.0,
+                                decoration: BoxDecoration(
+                                    color: Colors.teal[50],
+                                    borderRadius: BorderRadius.circular(8.0)),
+                                child: IconButton(
+                                  tooltip: "Call Vendor",
+                                  icon: Icon(
+                                    Icons.phone,
+                                    size: 16.0,
+                                    color: Colors.teal[500],
+                                  ),
+                                  onPressed: () {
+                                    var url = 'tel://' +
+                                        parsedData[i]['vendor']['phoneNumber'];
+                                    _launchURL(url);
+                                  },
+                                ),
+                              ),
+                            );
                             return Container(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
