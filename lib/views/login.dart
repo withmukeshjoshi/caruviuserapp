@@ -2,6 +2,7 @@ import 'package:caruviuserapp/components/toasts/errorToast.dart';
 import 'package:caruviuserapp/config/static.dart';
 import 'package:caruviuserapp/services/auth.service.dart';
 import 'package:caruviuserapp/views/homepage.dart';
+import 'package:caruviuserapp/views/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -31,13 +32,16 @@ class _LoginPageState extends State<LoginPage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(
+                height: 30.0,
+              ),
               Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage('assets/splash.png'),
                         fit: BoxFit.scaleDown)),
                 width: double.infinity,
-                height: 250.0,
+                height: 160.0,
               ),
               Padding(
                 padding: EdgeInsets.all(40.0),
@@ -47,17 +51,18 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text(
                       loginPageTitle,
-                      style: TextStyle(fontSize: 20.0),
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.w800),
                     ),
                     SizedBox(
                       height: 5.0,
                     ),
                     Text(
                       loginPageSubtitle,
-                      style: TextStyle(color: Colors.black26),
+                      style: TextStyle(color: Colors.black26, fontSize: 12.0),
                     ),
                     SizedBox(
-                      height: 30.0,
+                      height: 20.0,
                     ),
                     TextField(
                       keyboardType: TextInputType.phone,
@@ -70,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                           filled: true,
                           prefixText: "+91-",
                           labelText: "Phone Number",
-                          hintText: "0000000000",
+                          hintText: "989745XXXX",
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                   color: Colors.black12,
@@ -182,6 +187,39 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 )
                               : Text("Login")),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50.0,
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Signup()));
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Don't have an account?",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Text(
+                                "Signup",
+                                style: TextStyle(color: Colors.teal[900]),
+                              )
+                            ],
+                          )),
                     )
                   ],
                 ),
