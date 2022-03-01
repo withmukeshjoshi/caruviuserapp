@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:caruviuserapp/components/swiper.dart';
 import 'package:caruviuserapp/model/CityCategoryModel.dart';
 import 'package:caruviuserapp/model/CityWc.dart';
+import 'package:caruviuserapp/model/bannerModel.dart';
+import 'package:caruviuserapp/services/banner.service.dart';
 import 'package:caruviuserapp/services/city.service.dart';
 import 'package:caruviuserapp/services/quote.service.dart';
 import 'package:caruviuserapp/services/sharedPrefs.service.dart';
@@ -11,13 +14,11 @@ import 'package:caruviuserapp/services/user.service.dart';
 import 'package:caruviuserapp/views/category_page.dart';
 import 'package:caruviuserapp/views/category_page_transport.dart';
 import 'package:caruviuserapp/views/profile.dart';
-import 'package:caruviuserapp/views/search.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
 
@@ -37,11 +38,13 @@ class _HomePageState extends State<HomePage>
   int currentPage = 0;
   String location = "Loading";
   String searchTerm = "";
+  List<BannerModel> banners = [];
   bool loadingCategories = true;
   Map<String, List<CategoryModel>> categories = new Map();
   @override
   void initState() {
     loadDetails();
+    getBanners();
     messaging = FirebaseMessaging.instance;
     messaging.getToken().then((value) {
       print(value);
@@ -102,6 +105,16 @@ class _HomePageState extends State<HomePage>
     });
   }
 
+  getBanners() async {
+    var response = await BannerService().getAllBanners();
+    if (response.statusCode == 200) {
+      var parsedData = jsonDecode(response.body).cast();
+      parsedData.forEach((item) => banners.add(BannerModel.fromJson(item)));
+
+      setState(() {});
+    }
+  }
+
   Widget getTextWidgets() {
     List<Widget> list = [];
     if (this.categories.length == 0) {
@@ -144,16 +157,14 @@ class _HomePageState extends State<HomePage>
                   )),
           Container(
             height: value.length == 1
-                ? 300.0
+                ? 240.0
                 : (value.length < 4)
                     ? 150.0
                     : 130.0,
-            margin: (value.length < 4)
-                ? EdgeInsets.only(bottom: 15.0)
-                : EdgeInsets.only(bottom: 5.0),
+            margin: EdgeInsets.only(bottom: 5.0),
             child: ListView.builder(
                 physics: value.length == 1
-                    ? ClampingScrollPhysics()
+                    ? NeverScrollableScrollPhysics()
                     : ScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection:
@@ -166,7 +177,7 @@ class _HomePageState extends State<HomePage>
                     return GestureDetector(
                         child: Container(
                           width: 100.0,
-                          height: 250.0,
+                          height: 210.0,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -187,8 +198,8 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ),
                                 borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8.0),
-                                    topRight: Radius.circular(8.0)),
+                                    topLeft: Radius.circular(5.0),
+                                    topRight: Radius.circular(5.0)),
                               ),
                               Container(
                                 child: Row(
@@ -209,14 +220,11 @@ class _HomePageState extends State<HomePage>
                                                 fontSize: 16.0,
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          SizedBox(
-                                            height: 10.0,
-                                          ),
                                           Text(
                                             value[index].description,
                                             style: GoogleFonts.lato(
                                                 height: 1.4,
-                                                fontSize: 12.0,
+                                                fontSize: 10.0,
                                                 color: Colors.black54),
                                           ),
                                         ],
@@ -500,7 +508,7 @@ class _HomePageState extends State<HomePage>
             ],
           ),
           backgroundColor: Colors.teal[600],
-          toolbarHeight: 80.0,
+          toolbarHeight: 60.0,
           elevation: 0.0,
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -531,140 +539,141 @@ class _HomePageState extends State<HomePage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    height: 220.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        SizedBox(
-                          width: 250.0,
-                          child: Column(
-                            children: [
-                              Text("Caruvi Services",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.lato(
-                                    fontSize: 20.0,
-                                    height: 1.5,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  )),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Text(
-                                  "Get affordable price from verified Caruvi vendors",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.lato(
-                                    fontSize: 14.0,
-                                    height: 1.2,
-                                    color: Colors.white70,
-                                  ))
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        Container(
-                          width: 300.0,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              SizedBox(
-                                width: 200.0,
-                                child: TextField(
-                                  cursorColor: Colors.white,
-                                  style: TextStyle(color: Colors.white),
-                                  onChanged: (value) {
-                                    searchTerm = value;
-                                  },
-                                  decoration: InputDecoration(
-                                      isDense: true,
-                                      hintStyle: TextStyle(color: Colors.white),
-                                      errorStyle:
-                                          TextStyle(color: Colors.white),
-                                      labelStyle:
-                                          TextStyle(color: Colors.white),
-                                      helperStyle:
-                                          TextStyle(color: Colors.white),
-                                      counterStyle:
-                                          TextStyle(color: Colors.white),
-                                      floatingLabelStyle:
-                                          TextStyle(color: Colors.white),
-                                      contentPadding: EdgeInsets.all(15.0),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(0.0)),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(0.0)),
-                                      hintText: "Search Service"),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50.0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: Colors.white, width: 0.5)),
-                                  child: IconButton(
-                                    enableFeedback: true,
-                                    splashColor: Colors.teal[100],
-                                    icon: Icon(
-                                      Icons.search,
-                                      color: Colors.teal[500],
-                                    ),
-                                    onPressed: () {
-                                      if (searchTerm != '') {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SearchPage(
-                                                      term: searchTerm,
-                                                    )));
-                                      } else {
-                                        showSimpleNotification(
-                                            Text(
-                                              "Enter Search Term",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            elevation: 5.0,
-                                            background: Colors.teal[200],
-                                            leading: Icon(
-                                              Icons.error,
-                                              color: Colors.teal,
-                                            ));
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment(1.0, 1.0),
-                            end: Alignment(1.0, 0.0),
-                            colors: [Colors.teal[500]!, Colors.teal[600]!])),
-                  ),
-
+                  // Container(
+                  //   alignment: Alignment.center,
+                  //   width: double.infinity,
+                  //   height: 200.0,
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: [
+                  //       SizedBox(
+                  //         width: 250.0,
+                  //         child: Column(
+                  //           children: [
+                  //             Text("Caruvi Services",
+                  //                 textAlign: TextAlign.center,
+                  //                 style: GoogleFonts.lato(
+                  //                   fontSize: 20.0,
+                  //                   height: 1.5,
+                  //                   fontWeight: FontWeight.w600,
+                  //                   color: Colors.white,
+                  //                 )),
+                  //             SizedBox(
+                  //               height: 10.0,
+                  //             ),
+                  //             Text(
+                  //                 "Get affordable price from verified Caruvi vendors",
+                  //                 textAlign: TextAlign.center,
+                  //                 style: GoogleFonts.lato(
+                  //                   fontSize: 14.0,
+                  //                   height: 1.2,
+                  //                   color: Colors.white70,
+                  //                 ))
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         height: 30.0,
+                  //       ),
+                  //       Container(
+                  //         width: 300.0,
+                  //         decoration: BoxDecoration(
+                  //             border: Border.all(color: Colors.white)),
+                  //         child: Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           mainAxisSize: MainAxisSize.max,
+                  //           children: [
+                  //             SizedBox(
+                  //               width: 200.0,
+                  //               child: TextField(
+                  //                 cursorColor: Colors.white,
+                  //                 style: TextStyle(color: Colors.white),
+                  //                 onChanged: (value) {
+                  //                   searchTerm = value;
+                  //                 },
+                  //                 decoration: InputDecoration(
+                  //                     isDense: true,
+                  //                     hintStyle: TextStyle(color: Colors.white),
+                  //                     errorStyle:
+                  //                         TextStyle(color: Colors.white),
+                  //                     labelStyle:
+                  //                         TextStyle(color: Colors.white),
+                  //                     helperStyle:
+                  //                         TextStyle(color: Colors.white),
+                  //                     counterStyle:
+                  //                         TextStyle(color: Colors.white),
+                  //                     floatingLabelStyle:
+                  //                         TextStyle(color: Colors.white),
+                  //                     contentPadding: EdgeInsets.all(15.0),
+                  //                     focusedBorder: OutlineInputBorder(
+                  //                         borderSide: BorderSide.none,
+                  //                         borderRadius:
+                  //                             BorderRadius.circular(0.0)),
+                  //                     enabledBorder: OutlineInputBorder(
+                  //                         borderSide: BorderSide.none,
+                  //                         borderRadius:
+                  //                             BorderRadius.circular(0.0)),
+                  //                     hintText: "Search Service"),
+                  //               ),
+                  //             ),
+                  //             SizedBox(
+                  //               width: 50.0,
+                  //               child: Container(
+                  //                 decoration: BoxDecoration(
+                  //                     color: Colors.white,
+                  //                     border: Border.all(
+                  //                         color: Colors.white, width: 0.5)),
+                  //                 child: IconButton(
+                  //                   enableFeedback: true,
+                  //                   splashColor: Colors.teal[100],
+                  //                   icon: Icon(
+                  //                     Icons.search,
+                  //                     color: Colors.teal[500],
+                  //                   ),
+                  //                   onPressed: () {
+                  //                     if (searchTerm != '') {
+                  //                       Navigator.push(
+                  //                           context,
+                  //                           MaterialPageRoute(
+                  //                               builder: (context) =>
+                  //                                   SearchPage(
+                  //                                     term: searchTerm,
+                  //                                   )));
+                  //                     } else {
+                  //                       showSimpleNotification(
+                  //                           Text(
+                  //                             "Enter Search Term",
+                  //                             style: TextStyle(
+                  //                               color: Colors.black,
+                  //                             ),
+                  //                           ),
+                  //                           elevation: 5.0,
+                  //                           background: Colors.teal[200],
+                  //                           leading: Icon(
+                  //                             Icons.error,
+                  //                             color: Colors.teal,
+                  //                           ));
+                  //                     }
+                  //                   },
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //       gradient: LinearGradient(
+                  //           begin: Alignment(1.0, 1.0),
+                  //           end: Alignment(1.0, 0.0),
+                  //           colors: [Colors.teal[500]!, Colors.teal[600]!])),
+                  // ),
+                  banners.length > 0
+                      ? SwiperComponent(
+                          banners: banners,
+                        )
+                      : Container(),
                   SizedBox(
                     height: 25.0,
                   ),
@@ -801,8 +810,8 @@ class _HomePageState extends State<HomePage>
                                       ),
                                     ),
                                     borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(8.0),
-                                        topRight: Radius.circular(8.0)),
+                                        topLeft: Radius.circular(5.0),
+                                        topRight: Radius.circular(5.0)),
                                   ),
                                   Container(
                                     child: Row(
