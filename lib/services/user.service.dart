@@ -15,7 +15,7 @@ Future getMyProfile() async {
   );
 }
 
-Future updateMyProfile(Profile userProfile) async {
+Future updateMyProfile(Profile userProfile, String cityId) async {
   var token = await LocalStoredData().getStringKey('token');
   var url = Uri.parse(serverADD + '/users/me');
   return http.patch(url, headers: {
@@ -26,6 +26,7 @@ Future updateMyProfile(Profile userProfile) async {
     "emailAddress": userProfile.emailAddress,
     "phoneNumber": userProfile.phoneNumber,
     "businessName": userProfile.businessName,
+    "city": cityId,
     "address": userProfile.address,
   });
 }

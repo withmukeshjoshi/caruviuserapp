@@ -87,6 +87,7 @@ class _HomePageState extends State<HomePage>
   loadDetails() async {
     String getCity = await LocalStoredData().getStringKey('cityName');
     int getCityId = await LocalStoredData().getIntKey('cityId');
+    print(getCityId);
     var response = await CityService().getCategories(getCityId);
     if (response.statusCode == 200) {
       var parsedData = jsonDecode(response.body).cast<String, dynamic>();

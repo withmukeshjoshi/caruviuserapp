@@ -1,12 +1,12 @@
 import 'dart:convert';
-
-import 'package:caruviuserapp/components/service_list_item.dart';
 import 'package:caruviuserapp/components/toasts/errorToast.dart';
 import 'package:caruviuserapp/components/toasts/processing.dart';
-import 'package:caruviuserapp/components/toasts/successToast.dart';
+import 'package:caruviuserapp/model/CityModel.dart';
 import 'package:caruviuserapp/model/Profile.dart';
 import 'package:caruviuserapp/services/auth.service.dart';
+import 'package:caruviuserapp/services/city.service.dart';
 import 'package:caruviuserapp/services/user.service.dart';
+import 'package:caruviuserapp/views/homepage.dart';
 import 'package:caruviuserapp/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,7 +24,10 @@ class _ProfilePageState extends State<ProfilePage>
   late FToast fToast;
   bool isProcessing = false;
   late Profile userProfile;
-  late String fullName, phoneNumber, businessName, city, address, emailAddress;
+  late CityModel city;
+  int currentCity = 0;
+  List<CityModel> availableCities = [];
+  late String fullName, phoneNumber, businessName, address, emailAddress;
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController businessNameController = TextEditingController();
@@ -40,12 +43,25 @@ class _ProfilePageState extends State<ProfilePage>
     fToast.init(context);
   }
 
+  getCities() async {
+    var response = await CityService().getAllCities();
+    if (response.statusCode == 200) {
+      var parsedData = jsonDecode(response.body).cast();
+      parsedData
+          .forEach((item) => availableCities.add(CityModel.fromJson(item)));
+      city =
+          availableCities.where((element) => element.id == currentCity).first;
+
+      setState(() {});
+    }
+  }
+
   Future getUser() async {
     Response response = await getMyProfile();
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<String, dynamic>();
-      print(parsed);
+      this.currentCity = parsed['city']['id'];
       this.userProfile = Profile.fromJson(parsed);
       fullNameController.text = this.userProfile.fullName;
       phoneNumberController.text = this.userProfile.phoneNumber;
@@ -58,6 +74,7 @@ class _ProfilePageState extends State<ProfilePage>
       businessName = this.userProfile.businessName;
       address = this.userProfile.address;
     }
+    getCities();
   }
 
   @override
@@ -67,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage>
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              backgroundColor: Colors.teal[900],
+              backgroundColor: Colors.teal[600],
               pinned: true,
               floating: true,
               title: Text('Profile'),
@@ -184,38 +201,6 @@ class _ProfilePageState extends State<ProfilePage>
                       labelText: "Business Name"),
                 ),
               ),
-              // Container(
-              //   padding: EdgeInsets.all(10.0),
-              //   margin: EdgeInsets.only(bottom: 10.0),
-              //   child: TextField(
-              //     onChanged: (value) {
-              //       this.city = value;
-              //     },
-              //     controller: cityController,
-              //     decoration: InputDecoration(
-              //         enabled: false,
-              //         filled: true,
-              //         fillColor: Colors.grey[200],
-              //         disabledBorder: OutlineInputBorder(
-              //             borderSide: BorderSide(
-              //                 color: Colors.teal[50]!,
-              //                 style: BorderStyle.solid,
-              //                 width: 1.0)),
-              //         enabledBorder: OutlineInputBorder(
-              //             borderSide: BorderSide(
-              //                 color: Colors.teal[50]!,
-              //                 style: BorderStyle.solid,
-              //                 width: 1.0)),
-              //         focusedBorder: OutlineInputBorder(
-              //             borderSide: BorderSide(
-              //                 color: Colors.green,
-              //                 style: BorderStyle.solid,
-              //                 width: 1.0)),
-              //         helperText: "Eg: Kotdwar",
-              //         labelText: "City"),
-              //   ),
-              // ),
-
               Container(
                 padding: EdgeInsets.all(10.0),
                 margin: EdgeInsets.only(bottom: 10.0),
@@ -242,6 +227,44 @@ class _ProfilePageState extends State<ProfilePage>
                       labelText: "Business Address"),
                 ),
               ),
+              availableCities.length > 0
+                  ? Container(
+                      margin: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          border: Border.all(
+                              color: Colors.teal[50]!,
+                              style: BorderStyle.solid,
+                              width: 1.0)),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: DropdownButton<CityModel>(
+                          value: city,
+                          isExpanded: true,
+                          elevation: 4,
+                          underline: Container(),
+                          onChanged: (CityModel? newValue) {
+                            setState(() {
+                              if (newValue != null) {
+                                this.city = newValue;
+                              }
+                            });
+                          },
+                          hint: Text("Select City"),
+                          items: availableCities
+                              .map<DropdownMenuItem<CityModel>>(
+                                  (CityModel city) {
+                            return DropdownMenuItem<CityModel>(
+                              value: city,
+                              child: Text(
+                                city.name + " (" + city.state + ")",
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ))
+                  : Container(),
               SizedBox(
                 height: 20.0,
               ),
@@ -272,16 +295,15 @@ class _ProfilePageState extends State<ProfilePage>
                             businessName: this.businessName,
                             phoneNumber: userProfile.phoneNumber,
                             id: userProfile.id);
-                        Response response =
-                            await updateMyProfile(updatedProfile);
+                        Response response = await updateMyProfile(
+                            updatedProfile, city.id.toString());
                         if (response.statusCode == 200) {
-                          fToast.showToast(
-                            child: SuccessToast(
-                              message: "Profile Updated",
-                            ),
-                            gravity: ToastGravity.CENTER,
-                            toastDuration: Duration(seconds: 2),
-                          );
+                          updateProfileLocally(response, city);
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()));
                         } else {
                           fToast.showToast(
                             child: ErrorToast(
@@ -320,6 +342,7 @@ class _ProfilePageState extends State<ProfilePage>
               TextButton(
                   onPressed: () {
                     logoutUser();
+                    Navigator.pop(context);
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
                   },

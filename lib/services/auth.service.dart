@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:caruviuserapp/config/static.dart';
+import 'package:caruviuserapp/model/CityModel.dart';
 import 'package:caruviuserapp/services/sharedPrefs.service.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,7 +46,6 @@ Future createUser({
     print(err);
     return {'statusCode': 400, 'body': "Error"};
   }
-  return {'statusCode': 400, 'body': "Error"};
 }
 
 saveDetailsLocally(dynamic data) {
@@ -71,6 +71,21 @@ saveDetailsLocally(dynamic data) {
     LocalStoredData().setStringKey('userType', decodedResponse['userType']);
     LocalStoredData().setBoolKey('isloggedin', true);
   }
+}
+
+updateProfileLocally(dynamic data, CityModel city) {
+  print("Saving Data Locally");
+  var decodedResponse = jsonDecode(utf8.decode(data.bodyBytes)) as Map;
+
+  LocalStoredData().setStringKey('fullName', decodedResponse['fullName']);
+  LocalStoredData()
+      .setStringKey('emailAddress', decodedResponse['emailAddress']);
+  LocalStoredData().setStringKey('address', decodedResponse['address']);
+  LocalStoredData()
+      .setStringKey('businessName', decodedResponse['businessName']);
+  LocalStoredData().setIntKey('cityId', city.id);
+  LocalStoredData().setStringKey('cityName', city.name);
+  LocalStoredData().setStringKey('cityState', city.state);
 }
 
 logoutUser() {
