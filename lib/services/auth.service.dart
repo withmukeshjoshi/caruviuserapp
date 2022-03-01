@@ -14,6 +14,40 @@ Future authenticateuser({String phoneNumber = "", String password = ""}) async {
   return false;
 }
 
+Future createUser({
+  String firstName = "New",
+  String lastName = "User",
+  String phoneNumber = "",
+  String businessName = "",
+  String businessAddress = "",
+  String password = "",
+  int city = 0,
+}) async {
+  var url = Uri.parse(serverADD + '/users');
+
+  var newUser = {
+    'fullName': firstName + ' ' + lastName,
+    'profilePicture': '',
+    'emailAddress': 'user@example.com',
+    'phoneNumber': phoneNumber,
+    'businessName': businessName,
+    'address': businessAddress,
+    'userType': 'user',
+    'banned': '0',
+    'city': '${city}',
+    'password': password
+  };
+  try {
+    var response = await http.post(url, body: newUser);
+    if (response.statusCode == 201) return true;
+    return response;
+  } catch (err) {
+    print(err);
+    return {'statusCode': 400, 'body': "Error"};
+  }
+  return {'statusCode': 400, 'body': "Error"};
+}
+
 saveDetailsLocally(dynamic data) {
   var decodedResponse = jsonDecode(utf8.decode(data.bodyBytes)) as Map;
   if (decodedResponse['access_token'] != '' &&

@@ -1,11 +1,17 @@
+import 'dart:convert';
 import 'dart:developer';
-
 import 'package:caruviuserapp/components/toasts/errorToast.dart';
 import 'package:caruviuserapp/components/toasts/processing.dart';
+import 'package:caruviuserapp/components/toasts/successToast.dart';
+import 'package:caruviuserapp/model/CityModel.dart';
+import 'package:caruviuserapp/services/auth.service.dart';
+import 'package:caruviuserapp/services/city.service.dart';
+import 'package:caruviuserapp/views/login.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 
 class Signup extends StatefulWidget {
   Signup({Key? key}) : super(key: key);
@@ -23,9 +29,10 @@ class _SignupState extends State<Signup> {
       email = "",
       businessName = "",
       businessAddress = "",
-      city = "Select City",
       password = "",
       verifyPassword = "";
+  late CityModel city;
+  List<CityModel> availableCities = [];
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
@@ -33,8 +40,19 @@ class _SignupState extends State<Signup> {
   TextEditingController _businessAddressController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _verifyPasswordController = TextEditingController();
-  // TextEditingController _address = TextEditingController();
-  // TextEditingController _firstName = TextEditingController();
+
+  getCities() async {
+    var response = await CityService().getAllCities();
+    if (response.statusCode == 200) {
+      var parsedData = jsonDecode(response.body).cast();
+      parsedData
+          .forEach((item) => availableCities.add(CityModel.fromJson(item)));
+      city = availableCities[0];
+
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +97,7 @@ class _SignupState extends State<Signup> {
     super.initState();
     fToast = FToast();
     fToast.init(context);
+    getCities();
   }
 
   Widget initialInformationWidget() {
@@ -269,29 +288,6 @@ class _SignupState extends State<Signup> {
         ),
         Container(
           padding: EdgeInsets.all(10.0),
-          child: TextField(
-            onChanged: (value) {
-              this.businessName = value;
-            },
-            controller: _businessNameController,
-            decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Colors.teal[50]!,
-                        style: BorderStyle.solid,
-                        width: 1.0)),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Colors.green,
-                        style: BorderStyle.solid,
-                        width: 1.0)),
-                helperText: "Eg: Kotdwar",
-                helperStyle: TextStyle(fontSize: 10.0),
-                labelText: "Business Name (Optional)"),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(10.0),
           margin: EdgeInsets.only(bottom: 10.0),
           child: TextField(
             maxLines: 8,
@@ -313,7 +309,7 @@ class _SignupState extends State<Signup> {
                         width: 1.0)),
                 helperText: "Eg: Main market, Kotdwar",
                 helperStyle: TextStyle(fontSize: 10.0),
-                labelText: "Business Address"),
+                labelText: "Address"),
           ),
         ),
         Container(
@@ -327,25 +323,51 @@ class _SignupState extends State<Signup> {
                     width: 1.0)),
             child: SizedBox(
               width: double.infinity,
-              child: DropdownButton<String>(
+              child: DropdownButton<CityModel>(
                 value: city,
                 isExpanded: true,
                 elevation: 4,
                 underline: Container(),
-                onChanged: (String? newValue) {
-                  print(newValue);
-                  this.city = newValue!;
+                onChanged: (CityModel? newValue) {
+                  setState(() {
+                    if (newValue != null) {
+                      this.city = newValue;
+                    }
+                  });
                 },
                 hint: Text("Select City"),
-                items: <String>['Select City', 'One', 'Two', 'Free', 'Four']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+                items: availableCities
+                    .map<DropdownMenuItem<CityModel>>((CityModel city) {
+                  return DropdownMenuItem<CityModel>(
+                    value: city,
+                    child: Text(city.name + " (" + city.state + ")"),
                   );
                 }).toList(),
               ),
             )),
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: TextField(
+            onChanged: (value) {
+              this.businessName = value;
+            },
+            controller: _businessNameController,
+            decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.teal[50]!,
+                        style: BorderStyle.solid,
+                        width: 1.0)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.green,
+                        style: BorderStyle.solid,
+                        width: 1.0)),
+                helperText: "Eg: Caruvi Agro",
+                helperStyle: TextStyle(fontSize: 10.0),
+                labelText: "Business Name (Optional)"),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
@@ -490,7 +512,7 @@ class _SignupState extends State<Signup> {
                         style: BorderStyle.solid,
                         width: 1.0)),
                 helperStyle: TextStyle(fontSize: 10.0),
-                labelText: "Verify Password"),
+                labelText: "Confirm Password"),
           ),
         ),
         Padding(
@@ -503,48 +525,75 @@ class _SignupState extends State<Signup> {
                   elevation: 0.0,
                   primary: Colors.teal[900],
                 ),
-                onPressed: () {
-                  if (firstName.isEmpty) {
+                onPressed: () async {
+                  if (password.isEmpty) {
                     fToast.showToast(
                       child: ErrorToast(
-                        message: "Please enter First Name",
+                        message: "Please set a password",
                       ),
                       gravity: ToastGravity.CENTER,
                       toastDuration: Duration(seconds: 3),
                     );
                     return;
                   }
-                  if (lastName.isEmpty) {
+                  if (verifyPassword.isEmpty) {
                     fToast.showToast(
                       child: ErrorToast(
-                        message: "Please enter Last Name",
+                        message: "please confirm the password",
                       ),
                       gravity: ToastGravity.CENTER,
                       toastDuration: Duration(seconds: 3),
                     );
                     return;
                   }
-                  if (phoneNumber.isEmpty) {
+                  if (password != verifyPassword) {
                     fToast.showToast(
                       child: ErrorToast(
-                        message: "Please enter Phone Number",
+                        message: "Password didn't match. Please check",
                       ),
                       gravity: ToastGravity.CENTER,
                       toastDuration: Duration(seconds: 3),
                     );
                     return;
                   }
-                  if (phoneNumber.length < 10) {
+                  fToast.showToast(
+                    child: ProcessingToast(
+                      message: "Creating Account. Please wait",
+                    ),
+                    gravity: ToastGravity.CENTER,
+                    toastDuration: Duration(seconds: 3),
+                  );
+                  var userCreation = await createUser(
+                    firstName: firstName,
+                    lastName: lastName,
+                    phoneNumber: phoneNumber,
+                    businessName: businessName,
+                    businessAddress: businessAddress,
+                    password: password,
+                    city: city.id,
+                  );
+                  if (userCreation == true) {
                     fToast.showToast(
-                      child: ErrorToast(
-                        message: "Please enter 10-digit Phone Number",
+                      child: SuccessToast(
+                        message: "Account Created",
                       ),
                       gravity: ToastGravity.CENTER,
-                      toastDuration: Duration(seconds: 3),
+                      toastDuration: Duration(seconds: 5),
                     );
-                    return;
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
                   }
-                  // goNextPage();
+                  if (userCreation is Response) {
+                    var response =
+                        jsonDecode(userCreation.body).cast<String, dynamic>();
+                    fToast.showToast(
+                      child: ErrorToast(
+                        message: response['message'],
+                      ),
+                      gravity: ToastGravity.CENTER,
+                      toastDuration: Duration(seconds: 5),
+                    );
+                  }
                 },
                 child: Text("Create Account")),
           ),
