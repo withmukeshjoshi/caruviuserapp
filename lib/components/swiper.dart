@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:caruviuserapp/model/bannerModel.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,27 @@ class _SwiperComponentState extends State<SwiperComponent> {
   void initState() {
     super.initState();
     _pageController = PageController(viewportFraction: 0.9);
+    timer = Timer.periodic(Duration(seconds: 5), (Timer t) => slider());
+  }
+
+  void slider() {
+    if (widget.banners.length != (activePage + 1)) {
+      _pageController.nextPage(
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+      activePage++;
+    } else {
+      activePage = 1;
+      _pageController.animateToPage(0,
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+    }
+  }
+
+  Timer? timer;
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override

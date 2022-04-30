@@ -467,6 +467,12 @@ class _HomePageState extends State<HomePage>
     if (!await launchUrl(_url)) throw 'Could not launch $_url';
   }
 
+  void _launchUrlExternal(url) async {
+    final Uri _url = Uri.parse(url);
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication))
+      throw 'Could not launch $_url';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -808,8 +814,8 @@ class _HomePageState extends State<HomePage>
                       ElevatedButton(
                           onPressed: () {
                             var url =
-                                'https://api.whatsapp.com/send?phone=917017710368&text=I%20would%20like%20to%20connect%20with%20your%20team%20regarding';
-                            _launchUrl(url);
+                                'https://wa.me/917017710368/?text=I%20would%20like%20to%20connect%20with%20your%20team%20regarding';
+                            _launchUrlExternal(url);
                           },
                           child: Text(
                             'Click here to Contact Us',

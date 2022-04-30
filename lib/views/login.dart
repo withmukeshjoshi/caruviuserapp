@@ -261,6 +261,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _launchUrl(url) async {
     final Uri _url = Uri.parse(url);
-    if (!await launchUrl(_url)) throw 'Could not launch $_url';
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication))
+      throw 'Could not launch $_url';
   }
 }
