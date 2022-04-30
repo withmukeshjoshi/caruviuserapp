@@ -35,7 +35,7 @@ dependencies:
   flutter_local_notifications: ^9.0.1
   firebase_analytics: ^8.3.4
   firebase_core: ^1.8.0
-  url_launcher: ^6.0.12
+  url_launcher: ^6.1.0
   intl: ^0.17.0
   overlay_support: ^1.2.1
   cached_network_image: ^3.1.0
@@ -72,6 +72,7 @@ flutter:
   assets:
     - assets/login.jpg
     - assets/splash.png
+    - assets/logo.png
     - assets/loading.gif
     - assets/farming.png
     - assets/placeholder.jpg

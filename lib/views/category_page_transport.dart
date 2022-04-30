@@ -261,43 +261,24 @@ class _TransportCategoryPageState extends State<TransportCategoryPage> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  GestureDetector(
-                    child: Container(
-                      width: (MediaQuery.of(context).size.width - 100.0),
-                      height: 50.0,
-                      alignment: Alignment.center,
-                      color: Colors.teal[100],
-                      child: Text(
-                        calender,
-                        style: TextStyle(color: Colors.teal[900]),
-                      ),
-                    ),
-                    onTap: () {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return Container(
-                              height: 200,
-                              child: CupertinoDatePicker(
-                                minimumDate: DateTime.now(),
-                                mode: CupertinoDatePickerMode.date,
-                                initialDateTime: DateTime.now(),
-                                onDateTimeChanged: (DateTime newDateTime) {
-                                  // Do something
-                                  dateSelected = true;
-                                  final DateFormat formatter =
-                                      DateFormat('dd-MMM-yy');
-                                  String formatted =
-                                      formatter.format(newDateTime);
+                  Container(
+                    child: CupertinoDatePicker(
+                      minimumDate: DateTime.now(),
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: DateTime.now(),
+                      onDateTimeChanged: (DateTime newDateTime) {
+                        // Do something
+                        dateSelected = true;
+                        final DateFormat formatter = DateFormat('dd-MMM-yy');
+                        String formatted = formatter.format(newDateTime);
 
-                                  setState(() {
-                                    calender = formatted;
-                                  });
-                                },
-                              ),
-                            );
-                          });
-                    },
+                        setState(() {
+                          calender = formatted;
+                        });
+                      },
+                    ),
+                    width: double.infinity,
+                    height: 120.0,
                   ),
                 ],
               ),
@@ -342,7 +323,7 @@ class _TransportCategoryPageState extends State<TransportCategoryPage> {
                     : Center(
                         child: Container(
                           child: Text(
-                            "Enter Details to get quotes",
+                            "Please fill all details",
                           ),
                           padding: EdgeInsets.all(10.0),
                         ),

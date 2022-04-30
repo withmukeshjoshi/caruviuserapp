@@ -5,6 +5,7 @@ import 'package:caruviuserapp/views/homepage.dart';
 import 'package:caruviuserapp/views/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -220,6 +221,35 @@ class _LoginPageState extends State<LoginPage> {
                               )
                             ],
                           )),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50.0,
+                      child: TextButton(
+                          onPressed: () {
+                            var url =
+                                'https://api.whatsapp.com/send?phone=917017710368&text=I%20have%20forgot%20my%20password.';
+                            _launchUrl(url);
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Forgot Password?",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Text(
+                                "Reset",
+                                style: TextStyle(color: Colors.teal[900]),
+                              )
+                            ],
+                          )),
                     )
                   ],
                 ),
@@ -227,5 +257,10 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ));
+  }
+
+  void _launchUrl(url) async {
+    final Uri _url = Uri.parse(url);
+    if (!await launchUrl(_url)) throw 'Could not launch $_url';
   }
 }

@@ -462,8 +462,11 @@ class _HomePageState extends State<HomePage>
         crossAxisAlignment: CrossAxisAlignment.stretch, children: list);
   }
 
-  void _launchURL(url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+  void _launchUrl(url) async {
+    final Uri _url = Uri.parse(url);
+    if (!await launchUrl(_url)) throw 'Could not launch $_url';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -486,7 +489,10 @@ class _HomePageState extends State<HomePage>
           ],
           title: Row(
             children: [
-              Icon(Icons.location_on_outlined, color: Colors.white),
+              Image.asset(
+                'assets/logo.png',
+                width: 35.0,
+              ),
               SizedBox(
                 width: 5.0,
               ),
@@ -766,11 +772,54 @@ class _HomePageState extends State<HomePage>
                     padding: EdgeInsets.all(10.0),
                     child: Center(
                       child: Text(
-                        'Caruvi continuously working for our member’s development by providing them skill trainings of various sectors based on agricultural and support them to start businesses on small scales initially.',
+                        'Organization continuously working for our member’s development by providing them skill trainings of various sectors based on agricultural and support them to start businesses on small scales initially.',
                         style: GoogleFonts.lato(
                             height: 1.4, fontSize: 12.0, color: Colors.black87),
                       ),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Center(
+                      child: Text(
+                        'This app provides online platform to connect members as per their requirement with best rate on daily basis.',
+                        style: GoogleFonts.lato(
+                            height: 1.4, fontSize: 12.0, color: Colors.black87),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                    child: Center(
+                      child: Text(
+                        'For more details or to become caruvi vendor contact us',
+                        style: GoogleFonts.lato(
+                            height: 1.4,
+                            fontSize: 12.0,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            var url =
+                                'https://api.whatsapp.com/send?phone=917017710368&text=I%20would%20like%20to%20connect%20with%20your%20team%20regarding';
+                            _launchUrl(url);
+                          },
+                          child: Text(
+                            'Click here to Contact Us',
+                            style: GoogleFonts.lato(
+                                height: 1.4,
+                                fontSize: 12.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )),
+                    ],
                   ),
                   SizedBox(
                     height: 30.0,
@@ -837,7 +886,7 @@ class _HomePageState extends State<HomePage>
                                   onPressed: () {
                                     var url = 'tel://' +
                                         parsedData[i]['vendor']['phoneNumber'];
-                                    _launchURL(url);
+                                    _launchUrl(url);
                                   },
                                 ),
                               ),
@@ -938,7 +987,7 @@ class _HomePageState extends State<HomePage>
                                               var url = 'tel://' +
                                                   parsedData[i]['vendor']
                                                       ['phoneNumber'];
-                                              _launchURL(url);
+                                              _launchUrl(url);
                                             },
                                           ),
                                         )
