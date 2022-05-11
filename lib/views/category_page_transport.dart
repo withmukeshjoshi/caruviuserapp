@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:caruviuserapp/components/toasts/errorToast.dart';
-import 'package:caruviuserapp/components/toasts/processing.dart';
 import 'package:caruviuserapp/components/toasts/successToast.dart';
 import 'package:caruviuserapp/model/CityCategoryModel.dart';
 import 'package:caruviuserapp/services/request.service.dart';
@@ -12,6 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+
+import '../services/sharedPrefs.service.dart';
 
 class TransportCategoryPage extends StatefulWidget {
   final CategoryModel category;
@@ -26,6 +27,7 @@ class _TransportCategoryPageState extends State<TransportCategoryPage> {
   String calender = "Click to Select Date";
   bool dateSelected = false;
   late String text1;
+  late String userName;
   String enteredValue = '';
   String enteredValue2 = '';
   String enteredValue3 = '';
@@ -43,9 +45,10 @@ class _TransportCategoryPageState extends State<TransportCategoryPage> {
         enteredValue != '' &&
         !isProcessing &&
         dateSelected) {
+      userName = await LocalStoredData().getStringKey('fullName');
       isProcessing = !isProcessing;
       text1 =
-          "Need transport from $enteredValue to $enteredValue2 on $calender for $enteredValue3 people";
+          "$userName Need transport from $enteredValue to $enteredValue2 on $calender for $enteredValue3 people";
       Response response =
           await RequestService().sendRequest(widget.category.id, text1);
       // print();

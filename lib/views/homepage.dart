@@ -87,7 +87,6 @@ class _HomePageState extends State<HomePage>
   loadDetails() async {
     String getCity = await LocalStoredData().getStringKey('cityName');
     int getCityId = await LocalStoredData().getIntKey('cityId');
-    print(getCityId);
     var response = await CityService().getCategories(getCityId);
     if (response.statusCode == 200) {
       var parsedData = jsonDecode(response.body).cast<String, dynamic>();
@@ -161,7 +160,7 @@ class _HomePageState extends State<HomePage>
                 ? 260.0
                 : (value.length < 4)
                     ? 150.0
-                    : 130.0,
+                    : 150.0,
             margin: EdgeInsets.only(bottom: 5.0),
             child: ListView.builder(
                 physics: value.length == 1
@@ -172,8 +171,6 @@ class _HomePageState extends State<HomePage>
                     value.length == 1 ? Axis.vertical : Axis.horizontal,
                 itemCount: value.length,
                 itemBuilder: (BuildContext context, index) {
-                  print(value.length);
-
                   if (value.length == 1) {
                     return GestureDetector(
                         child: Container(
@@ -315,26 +312,59 @@ class _HomePageState extends State<HomePage>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ClipRRect(
-                                child: CachedNetworkImage(
-                                  imageUrl: value[index].photo,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: 80.0,
-                                  placeholder: (context, url) => Image.asset(
-                                    'assets/placeholder.jpg',
-                                    fit: BoxFit.cover,
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                    'assets/placeholder.jpg',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8.0),
-                                    topRight: Radius.circular(8.0)),
-                              ),
+                              value[index].available
+                                  ? ClipRRect(
+                                      child: CachedNetworkImage(
+                                        imageUrl: value[index].photo,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 80.0,
+                                        placeholder: (context, url) =>
+                                            Image.asset(
+                                          'assets/placeholder.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Image.asset(
+                                          'assets/placeholder.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8.0),
+                                          topRight: Radius.circular(8.0)),
+                                    )
+                                  : ClipRRect(
+                                      child: Opacity(
+                                        opacity: 0.5,
+                                        child: ColorFiltered(
+                                          colorFilter: ColorFilter.mode(
+                                            Colors.grey,
+                                            BlendMode.saturation,
+                                          ),
+                                          child: CachedNetworkImage(
+                                            imageUrl: value[index].photo,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 80.0,
+                                            placeholder: (context, url) =>
+                                                Image.asset(
+                                              'assets/placeholder.jpg',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Image.asset(
+                                              'assets/placeholder.jpg',
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8.0),
+                                          topRight: Radius.circular(8.0)),
+                                    ),
                               Container(
                                 color: Colors.white,
                                 child: SizedBox(
@@ -392,6 +422,7 @@ class _HomePageState extends State<HomePage>
                           }
                         });
                   }
+
                   return GestureDetector(
                     onTap: () {
                       if (value[index].type == 'Transport') {
@@ -420,35 +451,64 @@ class _HomePageState extends State<HomePage>
                             borderRadius: BorderRadius.circular(8.0),
                             child: Container(
                               width: 60.0,
-                              child: CachedNetworkImage(
-                                imageUrl: value[index].photo,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 130.0,
-                                placeholder: (context, url) => Image.asset(
-                                  'assets/placeholder.jpg',
-                                  fit: BoxFit.cover,
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                  'assets/placeholder.jpg',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                              child: value[index].available
+                                  ? CachedNetworkImage(
+                                      imageUrl: value[index].photo,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: 130.0,
+                                      placeholder: (context, url) =>
+                                          Image.asset(
+                                        'assets/placeholder.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                        'assets/placeholder.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Opacity(
+                                      opacity: 0.5,
+                                      child: ColorFiltered(
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.grey,
+                                          BlendMode.saturation,
+                                        ),
+                                        child: CachedNetworkImage(
+                                          imageUrl: value[index].photo,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: 130.0,
+                                          placeholder: (context, url) =>
+                                              Image.asset(
+                                            'assets/placeholder.jpg',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Image.asset(
+                                            'assets/placeholder.jpg',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                               height: 60.0,
                             ),
                           ),
                         ),
                         SizedBox(
-                          width: 60.0,
-                          child: Text(
-                            value[index].name,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            ),
-                          ),
-                        )
+                            width: 60.0,
+                            child: Opacity(
+                              opacity: value[index].available ? 1.0 : 0.8,
+                              child: Text(
+                                value[index].name,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ))
                       ],
                     ),
                   );
@@ -843,6 +903,126 @@ class _HomePageState extends State<HomePage>
                           shrinkWrap: true,
                           itemCount: parsedData.length,
                           itemBuilder: (context, i) {
+                            return Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 10.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        ClipRRect(
+                                          child: CachedNetworkImage(
+                                            imageUrl: parsedData[i]['category']
+                                                ['photo'],
+                                            fit: BoxFit.cover,
+                                            width: 50.0,
+                                            height: 50.0,
+                                            placeholder: (context, url) =>
+                                                Image.asset(
+                                              'assets/placeholder.jpg',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Image.asset(
+                                              'assets/placeholder.jpg',
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                        ),
+                                        SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              parsedData[i]['vendor']
+                                                          ['businessName'] !=
+                                                      ""
+                                                  ? parsedData[i]['vendor']
+                                                      ['businessName']
+                                                  : parsedData[i]['vendor']
+                                                          ['fullName'] +
+                                                      ' quoted ₹${parsedData[i]['amount']}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 12.0,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "${parsedData[i]['category']['name']} - ${parsedData[i]['category']['type']}",
+                                                  style: GoogleFonts.lato(
+                                                      fontSize: 10.0),
+                                                ),
+                                                parsedData[i]['description'] !=
+                                                        ""
+                                                    ? Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            "Description:",
+                                                            style: GoogleFonts.lato(
+                                                                fontSize: 10.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                          Text(
+                                                            parsedData[i]
+                                                                ['description'],
+                                                            style: GoogleFonts
+                                                                .lato(
+                                                                    fontSize:
+                                                                        10.0),
+                                                          )
+                                                        ],
+                                                      )
+                                                    : Container(),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      width: 40.0,
+                                      height: 40.0,
+                                      decoration: BoxDecoration(
+                                          color: Colors.teal[50],
+                                          borderRadius:
+                                              BorderRadius.circular(8.0)),
+                                      child: IconButton(
+                                        tooltip: "Call Vendor",
+                                        icon: Icon(
+                                          Icons.phone,
+                                          size: 16.0,
+                                          color: Colors.teal[500],
+                                        ),
+                                        onPressed: () {
+                                          var url = 'tel://' +
+                                              parsedData[i]['vendor']
+                                                  ['phoneNumber'];
+                                          _launchUrl(url);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ));
                             return ListTile(
                               horizontalTitleGap: 8.0,
                               leading: ClipRRect(
@@ -865,16 +1045,43 @@ class _HomePageState extends State<HomePage>
                                     BorderRadius.all(Radius.circular(5.0)),
                               ),
                               title: Text(
-                                parsedData[i]['vendor']['businessName'] +
-                                    ' quoted ₹${parsedData[i]['amount']}',
+                                parsedData[i]['vendor']['businessName'] != ""
+                                    ? parsedData[i]['vendor']['businessName']
+                                    : parsedData[i]['vendor']['fullName'] +
+                                        ' quoted ₹${parsedData[i]['amount']}',
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.lato(
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.w600),
                               ),
-                              subtitle: Text(
-                                "${parsedData[i]['category']['name']} - ${parsedData[i]['category']['type']}",
-                                style: GoogleFonts.lato(fontSize: 10.0),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${parsedData[i]['category']['name']} - ${parsedData[i]['category']['type']}",
+                                    style: GoogleFonts.lato(fontSize: 10.0),
+                                  ),
+                                  parsedData[i]['description'] != ""
+                                      ? Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Description:",
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 10.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ),
+                                            Text(
+                                              parsedData[i]['description'],
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 10.0),
+                                            )
+                                          ],
+                                        )
+                                      : Container(),
+                                ],
                               ),
                               trailing: Container(
                                 width: 40.0,
@@ -895,128 +1102,6 @@ class _HomePageState extends State<HomePage>
                                     _launchUrl(url);
                                   },
                                 ),
-                              ),
-                            );
-                            return Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    child: CachedNetworkImage(
-                                      imageUrl: parsedData[i]['category']
-                                          ['photo'],
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 100.0,
-                                      placeholder: (context, url) =>
-                                          Image.asset(
-                                        'assets/placeholder.jpg',
-                                        fit: BoxFit.cover,
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Image.asset(
-                                        'assets/placeholder.jpg',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(5.0),
-                                        topRight: Radius.circular(5.0)),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.6,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                parsedData[i]['vendor']
-                                                        ['businessName'] +
-                                                    ' quoted ₹${parsedData[i]['amount']}',
-                                                overflow: TextOverflow.ellipsis,
-                                                style: GoogleFonts.lato(
-                                                    fontSize: 16.0,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              SizedBox(
-                                                height: 5.0,
-                                              ),
-                                              Text(
-                                                'Vendor Name: ${parsedData[i]['vendor']['fullName']}',
-                                                maxLines: 3,
-                                                style: GoogleFonts.lato(
-                                                    height: 1.4,
-                                                    fontSize: 12.0,
-                                                    color: Colors.black54),
-                                              ),
-                                              SizedBox(
-                                                height: 10.0,
-                                              ),
-                                              Text(
-                                                "${parsedData[i]['category']['name']} - ${parsedData[i]['category']['type']}",
-                                                style: GoogleFonts.lato(
-                                                    fontSize: 12.0),
-                                              ),
-                                              SizedBox(
-                                                height: 10.0,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 50.0,
-                                          height: 50.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.teal[50],
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0)),
-                                          padding: EdgeInsets.all(10.0),
-                                          child: IconButton(
-                                            tooltip: "Call Vendor",
-                                            icon: Icon(
-                                              Icons.phone,
-                                              size: 16.0,
-                                              color: Colors.teal[500],
-                                            ),
-                                            onPressed: () {
-                                              var url = 'tel://' +
-                                                  parsedData[i]['vendor']
-                                                      ['phoneNumber'];
-                                              _launchUrl(url);
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    margin: EdgeInsets.all(13.0),
-                                  )
-                                ],
-                              ),
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 15.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    spreadRadius: 3,
-                                    blurRadius: 10,
-                                    offset: Offset(
-                                        0, 5), // changes position of shadow
-                                  ),
-                                ],
                               ),
                             );
                           });

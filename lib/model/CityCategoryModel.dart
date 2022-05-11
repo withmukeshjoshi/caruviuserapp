@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class CategoryModel {
   final int id;
   final String name;
@@ -6,14 +8,17 @@ class CategoryModel {
   final String value;
   final String nature;
   final String type;
-  CategoryModel(
-      {required this.id,
-      required this.name,
-      required this.description,
-      required this.photo,
-      required this.nature,
-      required this.value,
-      required this.type});
+  final bool available;
+  CategoryModel({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.photo,
+    required this.nature,
+    required this.value,
+    required this.type,
+    required this.available,
+  });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
@@ -24,6 +29,7 @@ class CategoryModel {
       nature: json['nature'] as String,
       value: json['value'] as String,
       type: json['type'] as String,
+      available: json['available'] as bool,
     );
   }
 }

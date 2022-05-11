@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:caruviuserapp/components/toasts/errorToast.dart';
-import 'package:caruviuserapp/components/toasts/processing.dart';
-import 'package:caruviuserapp/components/toasts/successToast.dart';
 import 'package:caruviuserapp/model/CityCategoryModel.dart';
 import 'package:caruviuserapp/services/request.service.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:overlay_support/overlay_support.dart';
+
+import '../services/sharedPrefs.service.dart';
 
 class CategoryPage extends StatefulWidget {
   final CategoryModel category;
@@ -21,22 +21,32 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   late String text1;
   late String text2;
+  late String userName;
   String enteredValue = '';
   late FToast fToast;
   bool isProcessing = false;
   @override
   void initState() {
+    getUserName();
     text1 = "I am looking for ";
     text2 = " of ${widget.category.name.toLowerCase()}";
-    generateText();
     fToast = FToast();
     fToast.init(context);
     super.initState();
   }
 
+  Future<String> getUserName() async {
+    userName = await LocalStoredData().getStringKey('fullName');
+    text1 = userName + " requested ";
+    text2 = "";
+    generateText();
+    return userName;
+  }
+
   generateText() {
     if (widget.category.nature == "Service") {
-      text1 = "I need ${widget.category.name.toLowerCase()} service for ";
+      text1 =
+          "${userName} need ${widget.category.name.toLowerCase()} service for ";
       text2 = " ";
     }
   }
