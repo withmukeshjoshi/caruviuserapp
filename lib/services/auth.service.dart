@@ -10,6 +10,7 @@ Future authenticateuser({String phoneNumber = "", String password = ""}) async {
   var url = Uri.parse(serverADD + '/login');
   var response = await http
       .post(url, body: {'phoneNumber': phoneNumber, 'password': password});
+  print(response.body);
   if (response.statusCode == 201) saveDetailsLocally(response);
   if (response.statusCode == 201) return true;
   return false;
